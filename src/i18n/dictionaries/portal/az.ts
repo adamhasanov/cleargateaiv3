@@ -15,6 +15,7 @@ const portal = {
     forgotCta: "Keçid göndər", forgotSent: "Bu e-poçtla hesab varsa, keçid göndərildi. Poçt qutunuzu yoxlayın (1 saat etibarlıdır).",
     backToLogin: "Girişə qayıt", resetTitle: "Yeni şifrə təyin edin", resetSubtitle: "Yeni şifrəni yazın. Digər cihazlardakı sessiyalar bağlanacaq.",
     newPassword: "Yeni şifrə", resetCta: "Şifrəni yenilə", resetMissingToken: "Keçid natamamdır. E-poçtdakı keçidi yenidən açın və ya yeni keçid istəyin.",
+    guestOr: "və ya", guestCta: "Qeydiyyatsız sına", guestHint: "MVP-ni sınamaq üçün: bir kliklə müvəqqəti qonaq hesabı açılır, e-poçt və şifrə lazım deyil. Qonağa {count} pulsuz yoxlama verilir.",
     working: "Gözləyin…", signInRequired: "Bu səhifə üçün daxil olun.",
   },
   errors: {

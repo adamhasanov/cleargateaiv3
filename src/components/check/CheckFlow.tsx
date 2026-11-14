@@ -14,6 +14,7 @@ import { DOCUMENT_IDS, type CheckResult, type DocumentId } from "@/lib/engine/ty
 import { SAMPLE_EXTRACTIONS } from "@/lib/sample";
 import type { AccountState } from "@/lib/billing/account";
 import { AlertIcon, ArrowRightIcon, CardIcon, ChatIcon, GridIcon, UserIcon } from "../Icons";
+import { GuestButton } from "../portal/GuestButton";
 import { RiskPanel } from "../portal/RiskPanel";
 import { AppShell } from "./AppShell";
 import { ProcessingView, type DocStatus, type Stage } from "./ProcessingView";
@@ -210,6 +211,7 @@ export function CheckFlow() {
             <Link className="btn btn--primary" href={`/${locale}/login?next=/${locale}/check`}>{p.nav.login}</Link>
             <Link className="btn btn--outline" href={`/${locale}/register?next=/${locale}/check`}>{p.nav.register}</Link>
           </div>
+          <GuestButton />
         </section>
       </AppShell>
     );

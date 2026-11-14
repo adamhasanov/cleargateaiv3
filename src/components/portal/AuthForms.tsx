@@ -11,6 +11,7 @@ import { setMe, type Me } from "@/lib/client/session";
 import { PASSWORD_MIN } from "@/lib/validation";
 import { AlertCircleIcon, CheckCircleIcon } from "../Icons";
 import { LanguageSwitcher } from "../LanguageSwitcher";
+import { GuestButton } from "./GuestButton";
 import { Logo } from "../Logo";
 
 /** Only same-site paths are allowed as a post-login destination (no open redirect). */
@@ -61,7 +62,8 @@ export function LoginForm() {
   const { locale, dict } = useI18n();
   const t = dict.portal.auth;
   const router = useRouter();
-  const next = safeNext(useSearchParams().get("next"), `/${locale}/dashboard`);
+  const nextParam = useSearchParams().get("next");
+  const next = safeNext(nextParam, `/${locale}/dashboard`);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -93,6 +95,7 @@ export function LoginForm() {
         <button className="btn btn--primary btn--block" type="submit" disabled={busy}>{busy ? t.working : t.loginCta}</button>
         <Link className="form__link" href={`/${locale}/forgot-password`}>{t.forgotLink}</Link>
       </form>
+      <GuestButton next={nextParam ? next : undefined} />
     </AuthShell>
   );
 }
@@ -101,7 +104,8 @@ export function RegisterForm() {
   const { locale, dict } = useI18n();
   const t = dict.portal.auth;
   const router = useRouter();
-  const next = safeNext(useSearchParams().get("next"), `/${locale}/dashboard`);
+  const nextParam = useSearchParams().get("next");
+  const next = safeNext(nextParam, `/${locale}/dashboard`);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -135,6 +139,7 @@ export function RegisterForm() {
         {error && <FormMessage tone="error">{error}</FormMessage>}
         <button className="btn btn--primary btn--block" type="submit" disabled={busy}>{busy ? t.working : t.registerCta}</button>
       </form>
+      <GuestButton next={nextParam ? next : undefined} />
     </AuthShell>
   );
 }

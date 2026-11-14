@@ -16,6 +16,7 @@ const portal: PortalDictionary = {
     forgotCta: "Send link", forgotSent: "If an account exists for this e-mail, a link has been sent. Check your inbox (valid for 1 hour).",
     backToLogin: "Back to sign in", resetTitle: "Set a new password", resetSubtitle: "Enter a new password. Sessions on other devices will be signed out.",
     newPassword: "New password", resetCta: "Update password", resetMissingToken: "This link is incomplete. Open the link from the e-mail again or request a new one.",
+    guestOr: "or", guestCta: "Try without signing up", guestHint: "To try the MVP: one click creates a temporary guest account, no e-mail or password needed. A guest gets {count} free check.",
     working: "Please wait…", signInRequired: "Sign in to open this page.",
   },
   errors: {

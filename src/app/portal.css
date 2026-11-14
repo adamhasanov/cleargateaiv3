@@ -274,3 +274,10 @@
 .samples__status--error { color: #f08a8a; }
 @media (max-width: 1100px) { .samples__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .samples__grid { grid-template-columns: 1fr; } .samples__card .btn { align-self: stretch; } }
+
+/* ---------- guest access ("try without signing up") ---------- */
+.guest { display: grid; gap: 10px; margin-top: 18px; }
+.guest__or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
+.guest__or::before, .guest__or::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.guest__hint { text-align: center; }
+.portal-empty .guest { width: min(440px, 100%); }
