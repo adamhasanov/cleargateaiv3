@@ -1,0 +1,70 @@
+{
+  "_comment": "SAMPLE / FICTIONAL demo document sets (MVP_SCOPE 9.2, DP-10). Single source for scripts/make-sample-documents.mjs (PDFs in public/samples/) and src/lib/engine/sample-documents.test.ts. No real company, tax ID, bank account or HS classification: names say 'Sample', IBANs use the fictional bank code SAMP, HS codes are placeholders. Party details (VÖEN, IBAN, phone, e-mail, contact) exist so the pre-AI masking can be tested. Weight 1,250 kg vs 1,200 kg is the approved illustrative example. A null value means the field is not printed on that document.",
+  "shared": {
+    "seller": {
+      "name": "Sample Ceramics Export Ltd.",
+      "address": ["14 Harbour Road, Sampleton 40210", "Sampleland"],
+      "taxId": "VÖEN 1402345671",
+      "phone": "+994 12 555 01 23",
+      "email": "sales@sample-ceramics.example",
+      "contact": "Contact: Aysel Mammadova",
+      "bank": "Bank: Sample Commercial Bank OJSC",
+      "iban": "IBAN: AZ77SAMP00000000001234567890",
+      "swift": "SWIFT: SAMPAZ22"
+    },
+    "buyer": {
+      "name": "Sample Import MMC",
+      "address": ["27 Example Avenue, Baku AZ1000", "Azerbaijan"],
+      "taxId": "VÖEN 1708912345",
+      "phone": "+994 50 555 44 77",
+      "email": "purchasing@sample-import.example"
+    },
+    "declarant": { "name": "Sample Customs Broker MMC", "taxId": "VÖEN 1300456782", "contact": "Declarant: Rashad Aliyev" },
+    "goods": "Ceramic floor tiles, 60 x 60 cm (sample goods)",
+    "currency": "USD",
+    "unitPrice": 462.5,
+    "date": "2026-11-01"
+  },
+  "sets": [
+    {
+      "id": "clean",
+      "title": "Clean documents — all four fields agree",
+      "documents": {
+        "invoice": { "number": "SAMPLE-INV-C01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" },
+        "packingList": { "number": "SAMPLE-PL-C01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" },
+        "customsDocument": { "number": "SAMPLE-CD-C01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" }
+      },
+      "expected": { "resultClass": "noMismatch", "weight": "match", "quantity": "match", "price": "match", "hsCode": "match" }
+    },
+    {
+      "id": "quantity-weight",
+      "title": "Quantity and weight mismatch — packing list differs",
+      "documents": {
+        "invoice": { "number": "SAMPLE-INV-Q01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" },
+        "packingList": { "number": "SAMPLE-PL-Q01", "cartons": 38, "grossKg": 1200, "netKg": 1100, "total": 18500, "hsCode": "0000.00" },
+        "customsDocument": { "number": "SAMPLE-CD-Q01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" }
+      },
+      "expected": { "resultClass": "mismatchesFound", "weight": "mismatch", "quantity": "mismatch", "price": "match", "hsCode": "match" }
+    },
+    {
+      "id": "hs-code",
+      "title": "HS code mismatch — customs document differs",
+      "documents": {
+        "invoice": { "number": "SAMPLE-INV-H01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" },
+        "packingList": { "number": "SAMPLE-PL-H01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" },
+        "customsDocument": { "number": "SAMPLE-CD-H01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.10" }
+      },
+      "expected": { "resultClass": "mismatchesFound", "weight": "match", "quantity": "match", "price": "match", "hsCode": "mismatch" }
+    },
+    {
+      "id": "missing-info",
+      "title": "Missing information — no HS code on the packing list, no value on the customs document",
+      "documents": {
+        "invoice": { "number": "SAMPLE-INV-M01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": "0000.00" },
+        "packingList": { "number": "SAMPLE-PL-M01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": 18500, "hsCode": null },
+        "customsDocument": { "number": "SAMPLE-CD-M01", "cartons": 40, "grossKg": 1250, "netKg": 1150, "total": null, "hsCode": "0000.00" }
+      },
+      "expected": { "resultClass": "incomplete", "weight": "match", "quantity": "match", "price": "match", "hsCode": "match" }
+    }
+  ]
+}

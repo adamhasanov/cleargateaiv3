@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- ClearGateAI mark (same paths as src/components/Logo.tsx) on the brand navy, so it reads on light and dark tab bars. -->
+  <rect width="64" height="64" rx="14" fill="#061d27"/>
+  <g transform="translate(7 11.5) scale(1.47)">
+    <path d="M17 2 31 26H3z" fill="none" stroke="#00D6C3" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M10.5 18.5 15 23l8.5-9.5" fill="none" stroke="#EAF4F5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

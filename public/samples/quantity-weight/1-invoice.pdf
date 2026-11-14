@@ -1,0 +1,89 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 2972 >>
+stream
+q 0.92 g BT /F2 130 Tf 0.7071 0.7071 -0.7071 0.7071 120 230 Tm (SAMPLE) Tj ET Q
+0.15 g 48 772 499 22 re f
+BT 1 g /F2 9 Tf 58 779 Td (SAMPLE DOCUMENT  -  FICTIONAL DATA  -  NOT A REAL TRANSACTION) Tj ET
+BT 0 g /F2 20 Tf 48 732 Td (COMMERCIAL INVOICE) Tj ET
+BT 0 g /F2 10 Tf 442.6 738 Td (No. SAMPLE-INV-Q01) Tj ET
+BT 0 g /F1 10 Tf 462.2 724 Td (Date: 2026-11-01) Tj ET
+0.2 G 1 w 48 712 m 547 712 l S
+BT 0.4 g /F2 8 Tf 48 687 Td (SELLER / EXPORTER) Tj ET
+BT 0.4 g /F2 8 Tf 297.5 687 Td (BUYER / IMPORTER) Tj ET
+BT 0 g /F2 9 Tf 48 672 Td (Sample Ceramics Export Ltd.) Tj ET
+BT 0 g /F1 9 Tf 48 660 Td (14 Harbour Road, Sampleton 40210) Tj ET
+BT 0 g /F1 9 Tf 48 648 Td (Sampleland) Tj ET
+BT 0 g /F1 9 Tf 48 636 Td (VÖEN 1402345671) Tj ET
+BT 0 g /F1 9 Tf 48 624 Td (Tel: +994 12 555 01 23) Tj ET
+BT 0 g /F1 9 Tf 48 612 Td (E-mail: sales@sample-ceramics.example) Tj ET
+BT 0 g /F2 9 Tf 297.5 672 Td (Sample Import MMC) Tj ET
+BT 0 g /F1 9 Tf 297.5 660 Td (27 Example Avenue, Baku AZ1000) Tj ET
+BT 0 g /F1 9 Tf 297.5 648 Td (Azerbaijan) Tj ET
+BT 0 g /F1 9 Tf 297.5 636 Td (VÖEN 1708912345) Tj ET
+BT 0 g /F1 9 Tf 297.5 624 Td (Tel: +994 50 555 44 77) Tj ET
+BT 0 g /F1 9 Tf 297.5 612 Td (E-mail: purchasing@sample-import.example) Tj ET
+BT 0.3 g /F1 9 Tf 48 594 Td (Terms: FOB \(sample\)    Payment: 30 days \(sample\)    Country of origin: Sampleland) Tj ET
+0.93 g 48 558 499 20 re f
+BT 0 g /F2 8 Tf 54 564 Td (DESCRIPTION OF GOODS) Tj ET
+BT 0 g /F2 8 Tf 300 564 Td (HS CODE) Tj ET
+BT 0 g /F2 8 Tf 343.24 564 Td (QTY \(CTN\)) Tj ET
+BT 0 g /F2 8 Tf 405.76 564 Td (UNIT PRICE \(USD\)) Tj ET
+BT 0 g /F2 8 Tf 485.32 564 Td (AMOUNT \(USD\)) Tj ET
+BT 0 g /F1 9 Tf 54 540 Td (Ceramic floor tiles, 60 x 60 cm \(sample goods\)) Tj ET
+BT 0 g /F1 9 Tf 300 540 Td (0000.00) Tj ET
+BT 0 g /F1 9 Tf 375.46 540 Td (40) Tj ET
+BT 0 g /F1 9 Tf 451.38 540 Td (462.50) Tj ET
+BT 0 g /F1 9 Tf 498.07 540 Td (18,500.00) Tj ET
+0.6 G 0.6 w 48 530 m 547 530 l S
+BT 0 g /F1 10 Tf 307.5 504 Td (Total quantity:) Tj ET
+BT 0 g /F2 10 Tf 489 504 Td (40 cartons) Tj ET
+BT 0 g /F1 10 Tf 307.5 488 Td (Total net weight:) Tj ET
+BT 0 g /F2 10 Tf 483.2 488 Td (1,150.00 kg) Tj ET
+BT 0 g /F1 10 Tf 307.5 472 Td (Total gross weight:) Tj ET
+BT 0 g /F2 10 Tf 483.2 472 Td (1,250.00 kg) Tj ET
+BT 0 g /F2 10 Tf 307.5 456 Td (TOTAL AMOUNT:) Tj ET
+BT 0 g /F2 10 Tf 471.6 456 Td (18,500.00 USD) Tj ET
+BT 0.4 g /F2 8 Tf 48 416 Td (BANK DETAILS OF THE SELLER) Tj ET
+BT 0 g /F1 9 Tf 48 401 Td (Bank: Sample Commercial Bank OJSC) Tj ET
+BT 0 g /F1 9 Tf 48 389 Td (IBAN: AZ77SAMP00000000001234567890) Tj ET
+BT 0 g /F1 9 Tf 48 377 Td (SWIFT: SAMPAZ22) Tj ET
+BT 0 g /F1 9 Tf 48 365 Td (Contact: Aysel Mammadova) Tj ET
+0.6 G 0.6 w 48 80 m 547 80 l S
+BT 0.35 g /F1 7.5 Tf 48 66 Td (All names, numbers, tax IDs and bank details in this document are fictional and prepared for a ClearGateAI demonstration.) Tj ET
+BT 0.35 g /F1 7.5 Tf 48 55 Td (The HS code is an illustrative placeholder, not a real classification. Not an official form.) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Title (SAMPLE commercial invoice SAMPLE-INV-Q01) /Producer (ClearGateAI sample generator) /Subject (SAMPLE - fictional data) >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000348 00000 n 
+0000000450 00000 n 
+0000003474 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R /Info 7 0 R >>
+startxref
+3621
+%%EOF

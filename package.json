@@ -1,0 +1,44 @@
+{
+  "name": "cleargateai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/decode-assets.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/decode-assets.mjs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "samples": "node scripts/make-sample-documents.mjs",
+    "epoint:sandbox": "node scripts/epoint-sandbox.mjs",
+    "user:role": "node scripts/user-role.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.8.0",
+    "@electric-sql/pglite": "0.5.13",
+    "@google/genai": "^3.3.0",
+    "next": "16.4.6",
+    "pdfjs-dist": "6.4.299",
+    "pg": "8.23.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "server-only": "0.0.1",
+    "tesseract.js": "7.0.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.6",
+    "typescript": "6.0.3",
+    "vitest": "5.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
