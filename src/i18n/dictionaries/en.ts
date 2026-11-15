@@ -114,7 +114,7 @@ const en: Dictionary = {
     notConfiguredTitle: "Document reading service is not connected",
     notConfiguredText: "The AI extraction service is not configured in this environment, so a check cannot run. An administrator must set GEMINI_API_KEY.",
     privacyNote:
-      "The document itself is never sent to the AI. Its text is extracted on our server (local OCR for scans); company names, VÖEN, IBAN, bank and contact details are masked, and only the masked text goes to the AI — if masking cannot be completed, nothing is sent. Masking is automatic and may miss some details. Files are not stored; only the values read and the file names stay in your account. Text PDFs, JPG and PNG are accepted; upload scanned PDFs without a text layer as images (JPG/PNG).",
+      "The document itself is never sent to the AI. Its text is extracted on our server (local OCR for scans); company names, VÖEN, IBAN, bank and contact details are masked, and only the masked text goes to the AI — if masking cannot be completed, nothing is sent. Masking is automatic and may miss some details. Files are not stored; only the values read and the file names stay in this browser (demo: no server account or database). Text PDFs, JPG and PNG are accepted; upload scanned PDFs without a text layer as images (JPG/PNG).",
     sampleTitle: "View a sample result",
     sampleText: "Runs the rule engine on prepared SAMPLE values. This is not a live document reading.",
     sampleCta: "Show sample",
@@ -149,6 +149,7 @@ const en: Dictionary = {
     pdfUnreadable: "The PDF could not be opened. Please check the file.",
     maskingIncomplete: "Sensitive data could not be fully masked, so the document was not sent to the AI.",
     ocrFailed: "The text in the image could not be read (timed out). Upload a clearer image or a PDF with text.",
+    tooManyRequests: "Too many requests. Please try again in a few minutes.",
     unauthenticated: "Your session has ended. Please sign in again.",
     checkClosed: "This check is already closed. Start a new one.",
     checkNotFound: "Check not found.",

@@ -2,9 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  // Database drivers run as plain Node modules (PGlite ships a WebAssembly build of PostgreSQL).
   // pdf.js and Tesseract (local text extraction / OCR before masking) also load workers and WebAssembly at runtime.
-  serverExternalPackages: ["@electric-sql/pglite", "pg", "pdfjs-dist", "tesseract.js"],
+  serverExternalPackages: ["pdfjs-dist", "tesseract.js"],
   // Files that are loaded by path at runtime (pdf.js worker, Tesseract worker script, helpers and WebAssembly core)
   // are not found by static tracing; include them explicitly so serverless hosts (Vercel) ship them.
   outputFileTracingIncludes: {

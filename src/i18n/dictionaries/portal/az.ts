@@ -16,9 +16,11 @@ const portal = {
     backToLogin: "Girişə qayıt", resetTitle: "Yeni şifrə təyin edin", resetSubtitle: "Yeni şifrəni yazın. Digər cihazlardakı sessiyalar bağlanacaq.",
     newPassword: "Yeni şifrə", resetCta: "Şifrəni yenilə", resetMissingToken: "Keçid natamamdır. E-poçtdakı keçidi yenidən açın və ya yeni keçid istəyin.",
     guestOr: "və ya", guestCta: "Qeydiyyatsız sına", guestHint: "MVP-ni sınamaq üçün: bir kliklə müvəqqəti qonaq hesabı açılır, e-poçt və şifrə lazım deyil. Qonağa {count} pulsuz yoxlama verilir.",
+    demoNote: "Bu, MVP-nin sınaq (demo) versiyasıdır: giriş saxtadır, istənilən e-poçt və şifrə qəbul olunur. Heç bir məlumat serverdə və ya bazada saxlanılmır, yalnız bu brauzerdə qalır.", registerSubtitleDemo: "Sınaq qeydiyyatı: istənilən məlumat qəbul olunur, heç yerdə saxlanılmır.",
     working: "Gözləyin…", signInRequired: "Bu səhifə üçün daxil olun.",
   },
   errors: {
+    tooManyRequests: "Çox sorğu göndərildi. Bir neçə dəqiqə sonra yenidən cəhd edin.",
     invalidCredentials: "E-poçt və ya şifrə yanlışdır.", emailTaken: "Bu e-poçtla hesab artıq var.",
     invalidInput: "Daxil edilən məlumatı yoxlayın.", tooManyAttempts: "Çox cəhd edildi. 15 dəqiqə sonra yenidən yoxlayın.",
     invalidToken: "Keçid etibarsızdır və ya vaxtı keçib. Yeni keçid istəyin.", wrongPassword: "Hazırkı şifrə yanlışdır.",
@@ -43,7 +45,7 @@ const portal = {
     loading: "Yüklənir…", advisorCard: "Gömrük məsləhətçisi", advisorCardText: "Nəticəni və uyğunsuzluqları sadə dildə izah edir.", openAdvisor: "Məsləhətçini aç",
   },
   plans: {
-    title: "Planlar", subtitle: "Ehtiyacınıza uyğun planı seçin. Limit və imkanlar serverdə yoxlanılır.",
+    title: "Planlar", subtitle: "Ehtiyacınıza uyğun planı seçin. Limitlər demo üçün simulyasiya olunur.",
     names: { free: "Pulsuz", starter: "Starter", professional: "Premium", business: "VIP" },
     monthly: "Aylıq", annual: "İllik", perMonth: "/ ay", perYear: "/ il", perDocument: "/ sənəd", priceNotSet: "Qiymət təsdiqlənməyib",
     current: "Hazırkı plan", choose: "Seç", renew: "Uzat", free: "0 AZN",
@@ -53,7 +55,8 @@ const portal = {
       users: "{count} istifadəçi", oneUser: "1 istifadəçi", reports: "Çap üçün hesabat", noReports: "Hesabat daxil deyil",
       support: { community: "Əsas dəstək", email: "E-poçt dəstəyi", priority: "Prioritet dəstək", dedicated: "Fərdi dəstək" },
     },
-    disclaimer: "Qiymətlər və limitlər ilkin dəyərlərdir və dəyişə bilər. Ödəniş Epoint vasitəsilə, bankın səhifəsində aparılır; kart məlumatları ClearGateAI-da saxlanılmır.",
+    disclaimer: "Qiymətlər və limitlər ilkin dəyərlərdir və dəyişə bilər. Bu demo versiyada ödəniş yoxdur: plan və limit yalnız simulyasiyadır.",
+    demoNote: "Demo rejimi: heç bir ödəniş aparılmır. Plan seçimi yalnız bu brauzerdə saxlanılır.", demoCreditAdded: "Tək yoxlama əlavə olundu (simulyasiya, ödəniş aparılmadı).", demoPlanSet: "{plan} planı seçildi (simulyasiya, ödəniş aparılmadı).",
     singleTitle: "Tək yoxlama", singleText: "Planınızın limiti bitibsə, bir yoxlama üçün ayrıca ödəyin.", singleCta: "Bir yoxlama al",
     paymentsOff: "Ödəniş sistemi hələ qoşulmayıb. Planları görmək mümkündür, amma alış hələ işləmir.",
     loginToBuy: "Almaq üçün daxil olun", usersNote: "Komanda hesabları (bir neçə istifadəçi) hazırlanır.",
@@ -68,6 +71,7 @@ const portal = {
     reason: "Səbəb: {reason}",
   },
   account: {
+    demoPlanNote: "Plan yalnız bu brauzerdə simulyasiya olunur; ödəniş və real abunə yoxdur.", demoResetTitle: "Demo məlumatlarını sil", demoResetText: "Bu brauzerdə saxlanılan plan, yoxlama tarixçəsi və söhbətlər silinir. Serverdə heç nə saxlanılmadığı üçün başqa yerdə silinəcək məlumat yoxdur.", demoReset: "Sıfırla", demoResetConfirm: "Bu brauzerdəki demo məlumatları silinsin?", demoResetDone: "Demo məlumatları silindi.",
     title: "Hesab", profile: "Profil", save: "Yadda saxla", saved: "Yadda saxlanıldı.", language: "Məktub və interfeys dili",
     changePassword: "Şifrəni dəyiş", currentPassword: "Hazırkı şifrə", passwordChanged: "Şifrə dəyişdirildi. Digər sessiyalar bağlandı.",
     subscription: "Abunə", freePlanNote: "Pulsuz plandasınız.", activeUntil: "Aktivdir: {date} tarixinədək",

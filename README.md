@@ -27,56 +27,29 @@ ClearGateAI checks customs trade documents **before submission**. The user uploa
 | `src/lib/explain.ts` | Template-based explanation and suggested fix (M-05) |
 | `src/i18n/` | Dictionaries (`az` is the default and the source) and locale handling (M-07) |
 | `src/lib/engine/risk.ts` | Shipment Risk Score — deterministic rules, documented in the file, unit-tested |
-| `src/lib/server/` | Database (`db.ts`, `migrations.ts`), sessions and passwords (`auth.ts`), checks, advisor, HTTP helpers |
-| `src/lib/billing/` | Plan catalogue (`plans.ts`) and plan/usage/credit state (`account.ts`) |
-| `src/lib/payments/` | Epoint protocol (`epoint.ts`) and payment lifecycle (`service.ts`) |
+| `src/lib/server/` | HTTP helpers (same-origin check) and an in-memory rate limiter. No database, no accounts |
+| `src/lib/client/demo.ts` | Browser-only demo store: fake sign-in, simulated plan, check history and advisor chats in localStorage |
+| `src/lib/billing/plans.ts` | Static plan catalogue (simulated plans, no payments) |
 | `src/lib/ai/` | Advisor chat provider and system prompt |
-| `src/app/api/` | `auth/*`, `account/*`, `checks/*`, `extract`, `payments/*`, `subscription`, `plans`, `advisor/*`, `admin/overview` |
-| `src/components/portal/` | Sign-in pages, dashboard, plans, account, payment status, saved check + report, advisor |
+| `src/app/api/` | `extract` and `advisor` — both stateless |
+| `src/components/portal/` | Fake sign-in/sign-up pages, dashboard, plans, account, saved check + report, advisor |
 
-## Accounts, risk score, advisor, payments and plans
+## MVP demo: no database, no real accounts
 
-Added on 2026-11-14 by explicit owner decision (see `docs/DECISION_2026-11-14_accounts_billing_advisor.md`). Everything below runs on real backend logic and the database; nothing is simulated except the clearly labelled **local test payment gateway**.
+This is an MVP simulation. **Sign in and sign up are fake**: any e-mail and password are accepted, nothing is verified, and no user data is sent to or stored on a server or in a database. The "account" (name, simulated plan, check history, advisor chats) lives only in this browser’s localStorage and can be erased from the Account page.
 
-| Feature | Status | Needs from you |
-|---|---|---|
-| Registration, login/logout, sessions (httpOnly cookie, hashed token), password change, password reset, roles (`user`/`admin`) | Working | E-mail provider for reset e-mails in production (`RESEND_API_KEY`, `MAIL_FROM`) |
-| Document checks saved per user, server-side comparison, usage limits enforced on the server, history window per plan | Working | — |
-| Shipment Risk Score 0–100 (Low/Medium/High) with reasons | Working | Team approval of the rule weights in `src/lib/engine/risk.ts` |
-| AI Customs Advisor (az/ru/en, conversation memory, explains the user's own checks) | Working | Paid AI quota for real traffic (the free Gemini key allows ~20 requests per model per day) |
-| Payments (single check, monthly/annual plans), signed webhook, reconciliation, history | Working against the local test gateway | Epoint merchant account + keys, result URL configured in the Epoint cabinet |
-| Plans Free / Starter (3 AZN per document) / Premium (60 AZN month, 300 AZN year) / VIP (60 AZN month, 600 AZN year): limits, advisor, risk score, history, report access | Working | Approved limits (`src/lib/billing/plans.ts`). Internal plan codes: Premium = `professional`, VIP = `business` |
-| Dashboard, account page, payment status page, printable report (Premium/VIP) | Working | — |
+| Feature | Status |
+|---|---|
+| Fake sign-in / sign-up and a one-click "Try without signing up" guest button | Simulated, browser only |
+| Plans Free (1 check in total) / Starter (3 AZN per document) / Premium (60 AZN month, 300 AZN year) / VIP (60 AZN month, 600 AZN year) | Simulated: choosing a plan only changes the limit in this browser, nothing is charged |
+| Document extraction (pre-AI masking, then AI) and the rule-engine comparison | Real |
+| Shipment Risk Score 0–100 (Low/Medium/High) with reasons | Real, deterministic |
+| AI Customs Advisor (az/ru/en) | Real AI; stateless: the browser sends the conversation and the extracted values, the server stores nothing |
+| Abuse protection | In-memory per-IP rate limits on `/api/extract` and `/api/advisor` (best effort) |
 
 **Shipment Risk Score** (`risk-1`): higher = more problems found in the documents. Mismatch HS code 30 / weight, quantity, price 20 each (+0/+5/+10 for minor/moderate/major spread: <2 %, ≥2 %, ≥10 %); unreadable document +15; field present in fewer than two documents +10; uncertain values (units, gross/net, unreadable number) +8; missing value +5 per document. Capped at 100. Low 0–24, Medium 25–59, High 60–100. It is not an official customs risk assessment, and the AI never sets the number.
 
-**Subscriptions** never charge automatically: a paid period is bought with one payment; paying again for the same plan extends it, paying for another plan switches immediately (no proration). Expiry is evaluated on each request. "Stop renewal" only marks the subscription so the interface no longer suggests renewing.
-
-**Privacy**: uploaded files are still never stored. A saved check holds only the values read from each document and the file names. Every record is scoped to its owner on the server; another user's IDs return 404.
-
-### Try it locally
-
-```bash
-npm install
-```
-
-```bash
-npm run epoint:sandbox
-```
-
-In another terminal (with the `EPOINT_*` test values and test prices in `.env.local`, see `.env.example`):
-
-```bash
-npm run dev
-```
-
-Then: register at `/az/register` → `/az/check` (1 free check per account; sample scenarios on the page) → the result shows the risk score → "Ask the advisor" (needs Starter or higher) → `/az/pricing` → choose a plan → on the **TEST GATEWAY** page choose Approve, Decline or leave (pending) → the status page and `/az/dashboard` update. Password-reset e-mails are printed in the `npm run dev` console.
-
-Make a user an admin (stop `npm run dev` first when using the local database):
-
-```bash
-npm run user:role -- someone@example.com admin
-```
+**Privacy**: uploaded files are never stored. A saved check holds only the values read from each document and the file names, in the browser. Because there is no server-side account, the demo history is not shared between devices.
 
 ## Local development
 

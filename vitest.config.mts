@@ -10,8 +10,7 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.ts"],
-    // Database tests use a throwaway in-memory PostgreSQL (PGlite), never the dev database.
-    env: { DATABASE_URL: "memory://", NODE_ENV: "test" },
+    env: { NODE_ENV: "test" },
     testTimeout: 30_000,
     hookTimeout: 60_000,
   },

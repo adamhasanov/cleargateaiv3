@@ -1,64 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { format } from "@/i18n/config";
 import { useI18n } from "@/i18n/I18nProvider";
-import type { AccountState } from "@/lib/billing/account";
-import { getPlans, type BillingPeriod, type Plan } from "@/lib/billing/plans";
-import { api, errorText, newIdempotencyKey } from "@/lib/client/http";
+import { SINGLE_CHECK_PRICE_MINOR, getPlans, type BillingPeriod, type Plan } from "@/lib/billing/plans";
+import { updateDemoData, useDemoAccount, useMe } from "@/lib/client/demo";
 import { formatMoney } from "@/lib/client/format";
-import { useMe } from "@/lib/client/session";
 import { AppShell } from "../check/AppShell";
-import { AlertCircleIcon, CheckIcon, InfoIcon, XIcon } from "../Icons";
-
-interface Catalogue {
-  plans: Plan[];
-  singleCheckPriceMinor: number | null;
-  paymentsConfigured: boolean;
-}
+import { CheckCircleIcon, CheckIcon, InfoIcon, XIcon } from "../Icons";
 
 export function Pricing() {
   const me = useMe();
   const { locale, dict } = useI18n();
   const t = dict.portal.plans;
-  const router = useRouter();
+  const demo = useDemoAccount();
   const [period, setPeriod] = useState<BillingPeriod>("monthly");
-  const [catalogue, setCatalogue] = useState<Catalogue | null>(null);
-  const [account, setAccount] = useState<AccountState | null>(null);
-  const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
-  useEffect(() => {
-    api<Catalogue>("/api/plans").then((r) => r.ok && setCatalogue(r.data));
-  }, []);
-  useEffect(() => {
-    if (me) api<{ account: AccountState }>("/api/account/summary").then((r) => r.ok && setAccount(r.data.account));
-  }, [me]);
+  const plans = getPlans();
+  const currentCode = demo?.plan.code ?? null;
 
-  // Until the catalogue arrives, show the plan structure without prices.
-  const plans = catalogue?.plans ?? getPlans({});
-  const currentCode = account?.plan.code ?? null;
-  const paymentsOn = catalogue?.paymentsConfigured ?? false;
-  const summary = catalogue;
-
-  async function buy(item: { purpose: "check_credit" } | { purpose: "subscription"; planCode: string; billingPeriod: BillingPeriod }, key: string) {
-    setBusy(key);
-    setError(null);
-    const r = await api<{ checkoutUrl: string | null; payment: { id: string; status: string } }>("/api/payments", {
-      body: { idempotencyKey: newIdempotencyKey(), language: locale, item },
-    });
-    if (r.ok && r.data.checkoutUrl) {
-      window.location.assign(r.data.checkoutUrl);
-      return;
-    }
-    if (r.ok) {
-      router.push(`/${locale}/payments/${r.data.payment.id}`);
-      return;
-    }
-    setBusy(null);
-    setError(errorText(dict.portal.errors, r.error));
+  /** Simulated purchase: nothing is charged; the choice is stored in this browser only. */
+  function pick(plan: Plan, perDocument: boolean) {
+    if (perDocument) updateDemoData((d) => ({ ...d, credits: d.credits + 1 }));
+    else updateDemoData((d) => ({ ...d, plan: plan.code }));
+    setNotice(perDocument ? t.demoCreditAdded : format(t.demoPlanSet, { plan: t.names[plan.code] }));
   }
 
   const feature = (on: boolean, text: string) => (
@@ -85,23 +52,20 @@ export function Pricing() {
           </div>
         </div>
 
-        {me && summary && !paymentsOn && (
-          <p className="notice notice--warning" role="status"><InfoIcon size={20} /><span>{t.paymentsOff}</span></p>
-        )}
-        {error && <p className="form-message form-message--error" role="alert"><AlertCircleIcon size={18} /><span>{error}</span></p>}
+        <p className="notice notice--warning" role="status"><InfoIcon size={20} /><span>{t.demoNote}</span></p>
+        {notice && <p className="form-message form-message--success" role="status"><CheckCircleIcon size={18} /><span>{notice}</span></p>}
 
         <div className="plan-grid">
           {plans.map((plan) => {
             // Starter is paid per document (the single-check price); the others per month / year.
             const perDocument = plan.code === "starter";
-            const price = plan.code === "free" ? null : perDocument ? catalogue?.singleCheckPriceMinor ?? null : period === "monthly" ? plan.priceMonthlyMinor : plan.priceAnnualMinor;
+            const price = plan.code === "free" ? null : perDocument ? SINGLE_CHECK_PRICE_MINOR : period === "monthly" ? plan.priceMonthlyMinor : plan.priceAnnualMinor;
             const isCurrent = plan.code === currentCode;
-            const key = perDocument ? "single" : `${plan.code}-${period}`;
             return (
               <article key={plan.code} className={`plan ${isCurrent ? "plan--current" : ""}`} aria-labelledby={`plan-${plan.code}`}>
                 <h2 id={`plan-${plan.code}`} className="plan__name">{t.names[plan.code]}</h2>
                 <p className="plan__price">
-                  {plan.code === "free" ? t.free : !catalogue ? <small aria-busy="true">—</small> : price ? <>{formatMoney(price, plan.currency, locale)} <small>{perDocument ? t.perDocument : period === "monthly" ? t.perMonth : t.perYear}</small></> : <small>{t.priceNotSet}</small>}
+                  {plan.code === "free" ? t.free : price ? <>{formatMoney(price, plan.currency, locale)} <small>{perDocument ? t.perDocument : period === "monthly" ? t.perMonth : t.perYear}</small></> : <small>{t.priceNotSet}</small>}
                 </p>
                 <ul className="plan__features">
                   {feature(true, plan.monthlyCheckLimit === null ? t.features.checksUnlimited : format(plan.checkLimitPeriod === "once" ? t.features.checksOnce : t.features.checks, { count: plan.monthlyCheckLimit }))}
@@ -123,10 +87,10 @@ export function Pricing() {
                       <button
                         type="button"
                         className={`btn btn--block ${isCurrent ? "btn--outline" : "btn--primary"}`}
-                        disabled={!paymentsOn || !price || busy !== null}
-                        onClick={() => (perDocument ? buy({ purpose: "check_credit" }, key) : buy({ purpose: "subscription", planCode: plan.code, billingPeriod: period }, key))}
+                        disabled={!price}
+                        onClick={() => pick(plan, perDocument)}
                       >
-                        {busy === key ? dict.portal.payments.redirecting : perDocument ? t.singleCta : isCurrent ? t.renew : t.choose}
+                        {perDocument ? t.singleCta : isCurrent ? t.renew : t.choose}
                       </button>
                     </>
                   )}
@@ -141,12 +105,12 @@ export function Pricing() {
             <p className="panel__title">{t.singleTitle}</p>
             <p className="panel__text">
               {t.singleText}{" "}
-              {summary?.singleCheckPriceMinor ? <strong>{formatMoney(summary.singleCheckPriceMinor, "AZN", locale)}</strong> : me ? t.priceNotSet : null}
+              <strong>{formatMoney(SINGLE_CHECK_PRICE_MINOR, "AZN", locale)}</strong>
             </p>
           </div>
           {me ? (
-            <button type="button" className="btn btn--outline" disabled={!paymentsOn || !summary?.singleCheckPriceMinor || busy !== null} onClick={() => buy({ purpose: "check_credit" }, "single")}>
-              {busy === "single" ? dict.portal.payments.redirecting : t.singleCta}
+            <button type="button" className="btn btn--outline" onClick={() => pick(plans[1], true)}>
+              {t.singleCta}
             </button>
           ) : (
             <Link className="btn btn--outline" href={`/${locale}/login?next=/${locale}/pricing`}>{t.loginToBuy}</Link>

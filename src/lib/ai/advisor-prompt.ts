@@ -1,5 +1,14 @@
 import { LEVEL_THRESHOLDS, MISMATCH_POINTS, MISSING_VALUE_POINTS, NOT_COMPARABLE_POINTS, SEVERITY_BONUS, UNCERTAIN_POINTS, UNREADABLE_DOCUMENT_POINTS } from "@/lib/engine/risk";
-import type { CheckRecord } from "@/lib/server/checks";
+import type { RiskScore } from "@/lib/engine/risk";
+import type { CheckResult } from "@/lib/engine/types";
+
+/** What the advisor is told about one check: values only, recomputed on the server from the extracted values. */
+export interface CheckSnapshot {
+  createdAt: string;
+  documentNames: Record<string, string>;
+  result: CheckResult;
+  risk: RiskScore | null;
+}
 
 const LANGUAGE = { az: "Azerbaijani", ru: "Russian", en: "English" } as const;
 
@@ -10,7 +19,7 @@ const RISK_RULES = `Shipment Risk Score rules (deterministic, version risk-1; hi
 - Unreadable document +${UNREADABLE_DOCUMENT_POINTS}; field present in fewer than two documents +${NOT_COMPARABLE_POINTS}; uncertain values (different units, gross vs net, unreadable number) +${UNCERTAIN_POINTS}; value missing in a readable document +${MISSING_VALUE_POINTS} per document.
 - Capped at 100. Low 0–${LEVEL_THRESHOLDS.medium - 1}, Medium ${LEVEL_THRESHOLDS.medium}–${LEVEL_THRESHOLDS.high - 1}, High ${LEVEL_THRESHOLDS.high}–100.`;
 
-export function advisorSystemPrompt(locale: "az" | "ru" | "en", check: CheckRecord | null): string {
+export function advisorSystemPrompt(locale: "az" | "ru" | "en", check: CheckSnapshot | null): string {
   return `You are the ClearGateAI Customs Advisor, an assistant for importers, customs brokers and document preparers in Azerbaijan.
 ClearGateAI checks an invoice, a packing list and a customs document before submission: AI reads weight, quantity, price and HS code; fixed rules compare them; the user corrects and submits documents themselves, outside ClearGateAI.
 
@@ -31,14 +40,13 @@ Ground every statement about this check in that data: name the documents and the
 }
 
 /** Compact, value-level view of a check for the model (no file content exists to include). */
-export function summarizeCheck(check: CheckRecord) {
+export function summarizeCheck(check: CheckSnapshot) {
   return {
-    checkedAt: check.completedAt ?? check.createdAt,
-    status: check.status,
+    checkedAt: check.createdAt,
     documents: check.documentNames,
-    resultClass: check.result?.resultClass ?? null,
-    unreadableDocuments: check.result?.unreadableDocuments ?? [],
-    fields: (check.result?.comparisons ?? []).map((c) => ({
+    resultClass: check.result.resultClass,
+    unreadableDocuments: check.result.unreadableDocuments,
+    fields: check.result.comparisons.map((c) => ({
       field: c.field,
       status: c.status,
       rule: c.ruleId,

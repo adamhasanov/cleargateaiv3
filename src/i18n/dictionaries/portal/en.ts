@@ -17,9 +17,11 @@ const portal: PortalDictionary = {
     backToLogin: "Back to sign in", resetTitle: "Set a new password", resetSubtitle: "Enter a new password. Sessions on other devices will be signed out.",
     newPassword: "New password", resetCta: "Update password", resetMissingToken: "This link is incomplete. Open the link from the e-mail again or request a new one.",
     guestOr: "or", guestCta: "Try without signing up", guestHint: "To try the MVP: one click creates a temporary guest account, no e-mail or password needed. A guest gets {count} free check.",
+    demoNote: "This is a demo of the MVP: sign-in is simulated and any e-mail and password are accepted. Nothing is stored on a server or in a database; it stays in this browser only.", registerSubtitleDemo: "Demo sign-up: any details are accepted and nothing is saved anywhere.",
     working: "Please wait…", signInRequired: "Sign in to open this page.",
   },
   errors: {
+    tooManyRequests: "Too many requests. Please try again in a few minutes.",
     invalidCredentials: "Wrong e-mail or password.", emailTaken: "An account with this e-mail already exists.",
     invalidInput: "Please check what you entered.", tooManyAttempts: "Too many attempts. Try again in 15 minutes.",
     invalidToken: "This link is invalid or has expired. Request a new one.", wrongPassword: "Your current password is wrong.",
@@ -44,7 +46,7 @@ const portal: PortalDictionary = {
     loading: "Loading…", advisorCard: "Customs advisor", advisorCardText: "Explains your results and mismatches in plain language.", openAdvisor: "Open the advisor",
   },
   plans: {
-    title: "Plans", subtitle: "Choose the plan that fits. Limits and features are enforced on the server.",
+    title: "Plans", subtitle: "Choose the plan that fits your needs. Limits are simulated in this demo.",
     names: { free: "Free", starter: "Starter", professional: "Premium", business: "VIP" },
     monthly: "Monthly", annual: "Annual", perMonth: "/ month", perYear: "/ year", perDocument: "/ document", priceNotSet: "Price not approved yet",
     current: "Current plan", choose: "Choose", renew: "Renew", free: "0 AZN",
@@ -54,7 +56,8 @@ const portal: PortalDictionary = {
       users: "{count} users", oneUser: "1 user", reports: "Printable report", noReports: "No report",
       support: { community: "Basic support", email: "E-mail support", priority: "Priority support", dedicated: "Dedicated support" },
     },
-    disclaimer: "Prices and limits are initial values and may change. Payment is made through Epoint on the bank's page; card details are never stored by ClearGateAI.",
+    disclaimer: "Prices and limits are initial values and may change. This demo has no payments: plans and limits are only simulated.",
+    demoNote: "Demo mode: no payment is made. Your plan choice is stored only in this browser.", demoCreditAdded: "One check added (simulated, nothing was charged).", demoPlanSet: "{plan} plan selected (simulated, nothing was charged).",
     singleTitle: "Single check", singleText: "Used up your plan's checks? Pay for one check on its own.", singleCta: "Buy one check",
     paymentsOff: "Payments are not connected yet. You can compare plans, but buying does not work yet.",
     loginToBuy: "Sign in to buy", usersNote: "Team accounts (several users) are being built.",
@@ -69,6 +72,7 @@ const portal: PortalDictionary = {
     reason: "Reason: {reason}",
   },
   account: {
+    demoPlanNote: "The plan is simulated in this browser only; there is no payment or real subscription.", demoResetTitle: "Delete demo data", demoResetText: "The plan, check history and chats saved in this browser will be deleted. Nothing is stored on a server, so there is nothing to delete elsewhere.", demoReset: "Reset", demoResetConfirm: "Delete the demo data in this browser?", demoResetDone: "Demo data deleted.",
     title: "Account", profile: "Profile", save: "Save", saved: "Saved.", language: "Language for e-mails and the interface",
     changePassword: "Change password", currentPassword: "Current password", passwordChanged: "Password changed. Other sessions were signed out.",
     subscription: "Subscription", freePlanNote: "You are on the Free plan.", activeUntil: "Active until {date}",

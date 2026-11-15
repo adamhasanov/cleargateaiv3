@@ -117,7 +117,7 @@ const az = {
     notConfiguredTitle: "Sənəd oxuma xidməti qoşulmayıb",
     notConfiguredText: "Bu mühitdə AI çıxarma xidməti konfiqurasiya edilməyib, ona görə yoxlama işləməyəcək. Administrator GEMINI_API_KEY dəyişənini təyin etməlidir.",
     privacyNote:
-      "Sənədin özü AI-a göndərilmir. Mətn serverdə çıxarılır (skan şəkillər üçün yerli OCR), şirkət adları, VÖEN, IBAN, bank və əlaqə məlumatları maskalanır və AI-a yalnız maskalanmış mətn gedir; maskalama tamamlanmasa, heç nə göndərilmir. Maskalama avtomatikdir və bəzi detalları qaçıra bilər. Fayllar saxlanmır; yalnız oxunan dəyərlər və fayl adları hesabınızda qalır. Mətnli PDF, JPG və PNG qəbul olunur; mətn qatı olmayan skan PDF-ləri şəkil (JPG/PNG) kimi yükləyin.",
+      "Sənədin özü AI-a göndərilmir. Mətn serverdə çıxarılır (skan şəkillər üçün yerli OCR), şirkət adları, VÖEN, IBAN, bank və əlaqə məlumatları maskalanır və AI-a yalnız maskalanmış mətn gedir; maskalama tamamlanmasa, heç nə göndərilmir. Maskalama avtomatikdir və bəzi detalları qaçıra bilər. Fayllar saxlanmır; yalnız oxunan dəyərlər və fayl adları yalnız bu brauzerdə qalır (demo, serverdə hesab və baza yoxdur). Mətnli PDF, JPG və PNG qəbul olunur; mətn qatı olmayan skan PDF-ləri şəkil (JPG/PNG) kimi yükləyin.",
     sampleTitle: "Nümunə nəticəyə baxın",
     sampleText: "Qayda mühərrikini hazırlanmış NÜMUNƏ dəyərlər üzərində işə salır. Bu, canlı sənəd oxuması deyil.",
     sampleCta: "Nümunəni göstər",
@@ -152,6 +152,7 @@ const az = {
     pdfUnreadable: "PDF açıla bilmədi. Faylı yoxlayın.",
     maskingIncomplete: "Həssas məlumatlar tam maskalana bilmədi, ona görə sənəd AI-a göndərilmədi.",
     ocrFailed: "Şəkildəki mətn oxuna bilmədi (vaxt bitdi). Daha aydın şəkil və ya mətnli PDF yükləyin.",
+    tooManyRequests: "Çox sorğu göndərildi. Bir neçə dəqiqə sonra yenidən cəhd edin.",
     unauthenticated: "Sessiyanın vaxtı bitib. Yenidən daxil olun.",
     checkClosed: "Bu yoxlama artıq bağlanıb. Yeni yoxlama başladın.",
     checkNotFound: "Yoxlama tapılmadı.",

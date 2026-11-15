@@ -1,7 +1,6 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import type { z } from "zod";
-import { getCurrentUser, type Role, type SessionUser } from "./auth";
 
 /** JSON response that is never cached. */
 export function json(body: unknown, status = 200): NextResponse {
@@ -21,8 +20,7 @@ export class HttpError extends Error {
 
 /**
  * CSRF protection for state-changing requests: the browser's Origin must be
- * this site. (Session cookies are also SameSite=Lax.) Server-to-server
- * callbacks (payment webhooks) authenticate by signature instead and skip this.
+ * this site.
  */
 export function assertSameOrigin(request: Request): void {
   const origin = request.headers.get("origin");
@@ -40,13 +38,6 @@ export function assertSameOrigin(request: Request): void {
     throw new HttpError(403, "forbidden");
   }
   if (!host || originHost !== host) throw new HttpError(403, "forbidden");
-}
-
-export async function requireUser(role?: Role): Promise<SessionUser> {
-  const user = await getCurrentUser();
-  if (!user) throw new HttpError(401, "unauthenticated");
-  if (role && user.role !== role) throw new HttpError(403, "forbidden");
-  return user;
 }
 
 /** Parses and validates a JSON body; invalid input → 400 with the failing field names only. */
@@ -86,10 +77,3 @@ export function clientIp(request: Request): string {
   return (request.headers.get("x-forwarded-for")?.split(",")[0] ?? request.headers.get("x-real-ip") ?? "local").trim();
 }
 
-/** Absolute base URL for links in e-mails and payment redirects. */
-export function appBaseUrl(request: Request): string {
-  const configured = process.env.APP_BASE_URL?.trim().replace(/\/$/, "");
-  if (configured) return configured;
-  const url = new URL(request.url);
-  return `${url.protocol}//${request.headers.get("x-forwarded-host") ?? url.host}`;
-}

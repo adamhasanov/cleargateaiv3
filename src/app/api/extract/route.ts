@@ -2,14 +2,11 @@ import { NextResponse } from "next/server";
 import { detectAcceptedMime, MAX_FILE_BYTES } from "@/lib/config/documents";
 import { DOCUMENT_IDS, type DocumentId } from "@/lib/engine/types";
 import { ExtractionError, getExtractionProvider } from "@/lib/extraction/provider";
-import { toDocumentExtraction } from "@/lib/extraction/schema";
-import { getCurrentUser } from "@/lib/server/auth";
-import { assertCheckAcceptsDocument, recordExtraction } from "@/lib/server/checks";
-import { getDb } from "@/lib/server/db";
-import { assertSameOrigin, HttpError } from "@/lib/server/http";
+import { toDocumentExtraction, type RawExtraction } from "@/lib/extraction/schema";
 import { DocumentTextError } from "@/lib/privacy/document-text";
 import { PrivacyBlockedError, prepareDocumentForAI } from "@/lib/privacy/prepare";
-import type { RawExtraction } from "@/lib/extraction/schema";
+import { assertSameOrigin, clientIp } from "@/lib/server/http";
+import { rateLimit } from "@/lib/server/rate-limit";
 
 const notFound = { found: false, raw: null, number: null, unit: null };
 const UNREADABLE: RawExtraction = { readable: false, weight: { ...notFound, basis: "unspecified" }, quantity: notFound, price: notFound, hsCode: { found: false, raw: null } };
@@ -21,9 +18,10 @@ export const maxDuration = 60;
 /**
  * POST one document; returns the extraction outcome for that document.
  *
- * Privacy (F9a, design plan): the file is read into memory, sent to the
- * configured provider, and dropped when the request ends. Nothing is written
- * to disk or a database, and no document content is logged.
+ * MVP demo: there are no accounts and no database. The file is read into
+ * memory, its text is extracted and masked, only the masked text goes to the
+ * AI provider, and everything is dropped when the request ends. Nothing is
+ * stored, and no document content is logged.
  */
 
 type ErrorCode = "badRequest" | "unsupportedFormat" | "tooLarge" | "notConfigured" | "providerFailed" | "refused" | "quotaExceeded";
@@ -39,19 +37,14 @@ export async function GET() {
   return NextResponse.json({ configured: provider !== null }, { headers: { "Cache-Control": "no-store" } });
 }
 
-/**
- * Requires a signed-in user and a `checkId` reserved with POST /api/checks
- * (which enforces the plan limit). Each document of a check is read once;
- * the extracted values are stored on the check, the file never is.
- */
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
   } catch {
     return fail("forbidden", 403);
   }
-  const user = await getCurrentUser();
-  if (!user) return fail("unauthenticated", 401);
+  // No accounts to meter, so cap how much one client can send (about 13 checks of 3 documents per 15 minutes).
+  if (!rateLimit(`extract|${clientIp(request)}`, 40, 15 * 60_000)) return fail("tooManyRequests", 429);
 
   const length = Number(request.headers.get("content-length") ?? "0");
   if (length > MAX_FILE_BYTES + 64 * 1024) return fail("tooLarge", 413);
@@ -65,19 +58,8 @@ export async function POST(request: Request) {
 
   const document = form.get("document");
   const file = form.get("file");
-  const checkId = form.get("checkId");
-  if (
-    typeof document !== "string" || !DOCUMENT_IDS.includes(document as DocumentId) || !(file instanceof File) ||
-    typeof checkId !== "string" || !/^[0-9a-f-]{36}$/i.test(checkId)
-  ) {
+  if (typeof document !== "string" || !DOCUMENT_IDS.includes(document as DocumentId) || !(file instanceof File)) {
     return fail("badRequest", 400);
-  }
-  const db = await getDb();
-  try {
-    await assertCheckAcceptsDocument(db, user.id, checkId, document as DocumentId);
-  } catch (error) {
-    if (error instanceof HttpError) return fail(error.code, error.status);
-    throw error;
   }
   if (file.size === 0) return fail("badRequest", 400);
   if (file.size > MAX_FILE_BYTES) return fail("tooLarge", 413);
@@ -96,10 +78,8 @@ export async function POST(request: Request) {
     const extraction = prepared.empty
       ? toDocumentExtraction(document as DocumentId, UNREADABLE) // nothing legible: no AI call at all
       : toDocumentExtraction(document as DocumentId, await provider.extract({ document: document as DocumentId, maskedText: prepared.text }));
-    await recordExtraction(db, user.id, checkId, extraction);
     return NextResponse.json({ extraction }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
-    if (error instanceof HttpError) return fail(error.code, error.status);
     if (error instanceof DocumentTextError) return fail(error.code, 422);
     if (error instanceof PrivacyBlockedError) {
       console.error("[extract] maskingIncomplete — request blocked, nothing sent");

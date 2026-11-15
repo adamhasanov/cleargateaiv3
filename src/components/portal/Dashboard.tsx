@@ -1,21 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { format } from "@/i18n/config";
 import { useI18n } from "@/i18n/I18nProvider";
-import type { AccountState } from "@/lib/billing/account";
-import { api, errorText } from "@/lib/client/http";
+import { useDemoAccount } from "@/lib/client/demo";
 import { formatDate } from "@/lib/client/format";
-import type { CheckRecord } from "@/lib/server/checks";
 import { AppShell } from "../check/AppShell";
 import { ArrowRightIcon, ChatIcon, FileIcon, PlusIcon } from "../Icons";
 import { RequireUser } from "./RequireUser";
-
-interface Summary {
-  account: AccountState;
-  totals: { total: number; completed: number };
-}
 
 export function Dashboard() {
   return (
@@ -28,31 +20,10 @@ export function Dashboard() {
 function DashboardBody({ name }: { name: string }) {
   const { locale, dict } = useI18n();
   const t = dict.portal.dashboard;
-  const [summary, setSummary] = useState<Summary | null>(null);
-  const [checks, setChecks] = useState<CheckRecord[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const account = useDemoAccount();
+  if (!account) return <p className="portal-loading" role="status">{t.loading}</p>;
 
-  useEffect(() => {
-    let alive = true;
-    Promise.all([api<Summary>("/api/account/summary"), api<{ checks: CheckRecord[] }>("/api/checks")]).then(([s, c]) => {
-      if (!alive) return;
-      if (!s.ok || !c.ok) {
-        setError(errorText(dict.portal.errors, !s.ok ? s.error : !c.ok ? c.error : "generic"));
-        return;
-      }
-      setSummary(s.data);
-      setChecks(c.data.checks);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [dict.portal.errors]);
-
-  if (error) return <p className="form-message form-message--error" role="alert">{error}</p>;
-  if (!summary || !checks) return <p className="portal-loading" role="status">{t.loading}</p>;
-
-  const { account, totals } = summary;
-  const { usage, plan } = account;
+  const { usage, plan, checks } = account;
 
   return (
     <section aria-labelledby="dash-title">
@@ -68,7 +39,7 @@ function DashboardBody({ name }: { name: string }) {
       </div>
 
       <div className="stat-grid">
-        <div className="stat"><span className="stat__label">{t.statTotal}</span><span className="stat__value">{totals.total}</span></div>
+        <div className="stat"><span className="stat__label">{t.statTotal}</span><span className="stat__value">{checks.length}</span></div>
         <div className="stat">
           <span className="stat__label">{t.statUsed}</span>
           <span className="stat__value">{usage.used}<small> / {usage.limit ?? "∞"}</small></span>
@@ -85,11 +56,9 @@ function DashboardBody({ name }: { name: string }) {
           <p className="panel__eyebrow">{t.planCard}</p>
           <p className="panel__title">{dict.portal.plans.names[plan.code]}</p>
           <p className="panel__text">
-            {account.subscription
-              ? format(account.subscription.cancelAtPeriodEnd ? dict.portal.account.endsOn : dict.portal.account.activeUntil, { date: formatDate(account.subscription.currentPeriodEnd, locale) })
-              : plan.checkLimitPeriod === "once"
-                ? t.freeOnce
-                : format(t.periodEnds, { date: formatDate(new Date(new Date(account.period.end).getTime() - 1), locale) })}
+            {plan.checkLimitPeriod === "once"
+              ? t.freeOnce
+              : format(t.periodEnds, { date: formatDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), locale) })}
           </p>
           <Link className="btn btn--outline btn--sm" href={`/${locale}/pricing`}>{t.changePlan}</Link>
         </div>
@@ -119,9 +88,7 @@ function DashboardBody({ name }: { name: string }) {
                 <span className="check-row__date">{formatDate(c.createdAt, locale, true)}</span>
                 <span className="check-row__docs">{Object.values(c.documentNames).join(" · ")}</span>
                 <span className="check-row__result">
-                  {c.status === "completed" && c.result
-                    ? format(dict.results.summary[c.result.resultClass].title, { count: c.result.comparisons.filter((x) => x.status === "mismatch").length })
-                    : c.status === "processing" ? t.statusProcessing : t.statusFailed}
+                  {format(dict.results.summary[c.result.resultClass].title, { count: c.result.comparisons.filter((x) => x.status === "mismatch").length })}
                 </span>
                 <span className="check-row__risk">
                   {c.risk ? <span className={`risk-badge risk-badge--${c.risk.level}`}>{c.risk.score} · {dict.portal.risk.levels[c.risk.level]}</span> : "—"}
