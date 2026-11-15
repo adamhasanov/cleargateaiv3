@@ -47,10 +47,21 @@ async function createPglite(dataDir: string | undefined): Promise<Db> {
   };
 }
 
+/** The URL may carry ?sslmode=require; TLS is configured explicitly below, so drop it (avoids pg's deprecation warning). */
+function withoutSslMode(url: string): string {
+  try {
+    const u = new URL(url);
+    u.searchParams.delete("sslmode");
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 async function createPostgres(url: string): Promise<Db> {
   const { Pool } = (await import("pg")).default;
   const pool = new Pool({
-    connectionString: url,
+    connectionString: withoutSslMode(url),
     max: Number(process.env.DATABASE_POOL_MAX ?? 5),
     ssl: /sslmode=disable/.test(url) || /localhost|127\.0\.0\.1/.test(url) ? undefined : { rejectUnauthorized: true },
   });

@@ -2,13 +2,13 @@ import type { DocumentExtraction, DocumentId } from "@/lib/engine/types";
 
 export type ApiErrorCode =
   | "badRequest" | "unsupportedFormat" | "tooLarge" | "notConfigured" | "providerFailed" | "refused" | "quotaExceeded" | "network"
-  | "unauthenticated" | "checkClosed" | "checkNotFound" | "documentAlreadyRead" | "scannedPdf" | "pdfUnreadable" | "maskingIncomplete";
+  | "unauthenticated" | "checkClosed" | "checkNotFound" | "documentAlreadyRead" | "scannedPdf" | "pdfUnreadable" | "maskingIncomplete" | "ocrFailed";
 
 export type ExtractResponse = { ok: true; extraction: DocumentExtraction } | { ok: false; error: ApiErrorCode };
 
 const KNOWN: ApiErrorCode[] = [
   "badRequest", "unsupportedFormat", "tooLarge", "notConfigured", "providerFailed", "refused", "quotaExceeded",
-  "unauthenticated", "checkClosed", "checkNotFound", "documentAlreadyRead", "scannedPdf", "pdfUnreadable", "maskingIncomplete",
+  "unauthenticated", "checkClosed", "checkNotFound", "documentAlreadyRead", "scannedPdf", "pdfUnreadable", "maskingIncomplete", "ocrFailed",
 ];
 
 export async function extractDocument(checkId: string, document: DocumentId, file: File, signal: AbortSignal): Promise<ExtractResponse> {

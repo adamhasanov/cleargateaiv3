@@ -151,6 +151,7 @@ const az = {
     scannedPdf: "Bu PDF skandır (mətn qatı yoxdur), ona görə maskalana bilmir. Səhifələri JPG və ya PNG şəkil kimi yükləyin.",
     pdfUnreadable: "PDF açıla bilmədi. Faylı yoxlayın.",
     maskingIncomplete: "Həssas məlumatlar tam maskalana bilmədi, ona görə sənəd AI-a göndərilmədi.",
+    ocrFailed: "Şəkildəki mətn oxuna bilmədi (vaxt bitdi). Daha aydın şəkil və ya mətnli PDF yükləyin.",
     unauthenticated: "Sessiyanın vaxtı bitib. Yenidən daxil olun.",
     checkClosed: "Bu yoxlama artıq bağlanıb. Yeni yoxlama başladın.",
     checkNotFound: "Yoxlama tapılmadı.",

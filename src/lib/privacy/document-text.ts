@@ -11,10 +11,13 @@ import type { AcceptedMime } from "@/lib/config/documents";
  */
 
 export class DocumentTextError extends Error {
-  constructor(public readonly code: "scannedPdf" | "pdfUnreadable") {
+  constructor(public readonly code: "scannedPdf" | "pdfUnreadable" | "ocrFailed") {
     super(code);
   }
 }
+
+/** OCR must finish well inside the platform's function limit so a failure is a clean error, not a timeout. */
+const OCR_TIMEOUT_MS = 40_000;
 
 export interface DocumentText {
   text: string;
@@ -106,9 +109,26 @@ function ocrWorker(): Promise<OcrWorker> {
 }
 
 async function imageText(bytes: Uint8Array): Promise<string> {
-  const worker = await ocrWorker();
-  const { data } = await worker.recognize(Buffer.from(bytes));
-  return data.text;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      (async () => {
+        const worker = await ocrWorker();
+        const { data } = await worker.recognize(Buffer.from(bytes));
+        return data.text;
+      })(),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error("ocr timeout")), OCR_TIMEOUT_MS);
+      }),
+    ]);
+  } catch {
+    // A crashed or stuck worker must not be reused; the next request starts a fresh one.
+    globalForOcr.__cgOcr = undefined;
+    console.error("[ocr] failed or timed out"); // content-free
+    throw new DocumentTextError("ocrFailed");
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function extractDocumentText(bytes: Uint8Array, mime: AcceptedMime): Promise<DocumentText> {

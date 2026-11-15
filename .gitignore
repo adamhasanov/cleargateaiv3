@@ -13,3 +13,4 @@ node_modules/
 
 # team-internal documents (repository is public)
 docs/
+.env*

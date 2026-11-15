@@ -148,6 +148,7 @@ const en: Dictionary = {
     scannedPdf: "This PDF is a scan without a text layer, so it cannot be masked. Upload the pages as JPG or PNG images.",
     pdfUnreadable: "The PDF could not be opened. Please check the file.",
     maskingIncomplete: "Sensitive data could not be fully masked, so the document was not sent to the AI.",
+    ocrFailed: "The text in the image could not be read (timed out). Upload a clearer image or a PDF with text.",
     unauthenticated: "Your session has ended. Please sign in again.",
     checkClosed: "This check is already closed. Start a new one.",
     checkNotFound: "Check not found.",
