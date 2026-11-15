@@ -8,6 +8,7 @@ import { SINGLE_CHECK_PRICE_MINOR, getPlans, type BillingPeriod, type Plan } fro
 import { updateDemoData, useDemoAccount, useMe } from "@/lib/client/demo";
 import { formatMoney } from "@/lib/client/format";
 import { AppShell } from "../check/AppShell";
+import { FakeCheckout } from "./FakeCheckout";
 import { CheckCircleIcon, CheckIcon, InfoIcon, XIcon } from "../Icons";
 
 export function Pricing() {
@@ -22,7 +23,13 @@ export function Pricing() {
   const currentCode = demo?.plan.code ?? null;
 
   /** Simulated purchase: nothing is charged; the choice is stored in this browser only. */
+  const [pending, setPending] = useState<{ plan: Plan; perDocument: boolean; amount: number } | null>(null);
   function pick(plan: Plan, perDocument: boolean) {
+    const amount = perDocument ? SINGLE_CHECK_PRICE_MINOR : period === "monthly" ? plan.priceMonthlyMinor : plan.priceAnnualMinor;
+    setPending({ plan, perDocument, amount: amount ?? 0 });
+  }
+  function paid(plan: Plan, perDocument: boolean) {
+    setPending(null);
     if (perDocument) updateDemoData((d) => ({ ...d, credits: d.credits + 1 }));
     else updateDemoData((d) => ({ ...d, plan: plan.code }));
     setNotice(perDocument ? t.demoCreditAdded : format(t.demoPlanSet, { plan: t.names[plan.code] }));
@@ -37,6 +44,14 @@ export function Pricing() {
 
   return (
     <AppShell>
+      {pending && (
+        <FakeCheckout
+          title={pending.perDocument ? t.singleTitle : `${t.names[pending.plan.code]} · ${period === "monthly" ? t.monthly : t.annual}`}
+          amountMinor={pending.amount}
+          onPaid={() => paid(pending.plan, pending.perDocument)}
+          onCancel={() => setPending(null)}
+        />
+      )}
       <section aria-labelledby="pricing-title">
         <div className="page-head">
           <div>

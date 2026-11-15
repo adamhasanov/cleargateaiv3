@@ -58,6 +58,7 @@ const portal: PortalDictionary = {
     },
     disclaimer: "Prices and limits are initial values and may change. This demo has no payments: plans and limits are only simulated.",
     demoNote: "Demo mode: no payment is made. Your plan choice is stored only in this browser.", demoCreditAdded: "One check added (simulated, nothing was charged).", demoPlanSet: "{plan} plan selected (simulated, nothing was charged).",
+    fakePayTitle: "Payment (simulation)", fakePayNote: "This is a fake payment: no card details are asked for, no payment provider is contacted and nothing is charged.", fakePayCta: "Pay (simulation)", fakePaying: "Processing payment…", fakePaid: "Payment successful (simulation).", fakeCancel: "Cancel",
     singleTitle: "Single check", singleText: "Used up your plan's checks? Pay for one check on its own.", singleCta: "Buy one check",
     paymentsOff: "Payments are not connected yet. You can compare plans, but buying does not work yet.",
     loginToBuy: "Sign in to buy", usersNote: "Team accounts (several users) are being built.",

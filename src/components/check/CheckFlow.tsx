@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { format } from "@/i18n/config";
 import { useI18n } from "@/i18n/I18nProvider";
 import { extractDocument, fetchExtractionConfigured, type ApiErrorCode } from "@/lib/client/api";
+import { SINGLE_CHECK_PRICE_MINOR } from "@/lib/billing/plans";
 import { errorText } from "@/lib/client/http";
 import { newId, updateDemoData, useDemoAccount, useMe, type DemoCheck } from "@/lib/client/demo";
 import { runCheck } from "@/lib/engine/compare";
@@ -12,6 +13,7 @@ import { computeRiskScore } from "@/lib/engine/risk";
 import { DOCUMENT_IDS, type CheckResult, type DocumentExtraction, type DocumentId } from "@/lib/engine/types";
 import { SAMPLE_EXTRACTIONS } from "@/lib/sample";
 import { AlertIcon, ArrowRightIcon, CardIcon, ChatIcon, GridIcon, UserIcon } from "../Icons";
+import { FakeCheckout } from "../portal/FakeCheckout";
 import { GuestButton } from "../portal/GuestButton";
 import { RiskPanel } from "../portal/RiskPanel";
 import { AppShell } from "./AppShell";
@@ -154,9 +156,12 @@ export function CheckFlow() {
   }, []);
 
   /** Simulated purchase: no payment happens, a single-check credit is just added in this browser. */
-  const buySingleCheck = useCallback(() => {
+  const [paying, setPaying] = useState(false);
+  const buySingleCheck = useCallback(() => setPaying(true), []);
+  const paidSingleCheck = useCallback(() => {
     updateDemoData((d) => ({ ...d, credits: d.credits + 1 }));
     setBlocker(null);
+    setPaying(false);
   }, []);
 
   // ---------- signed out ----------
@@ -187,6 +192,7 @@ export function CheckFlow() {
 
   return (
     <AppShell lockLanguage={phase === "processing" && !failed}>
+      {paying && <FakeCheckout title={p.plans.singleTitle} amountMinor={SINGLE_CHECK_PRICE_MINOR} onPaid={paidSingleCheck} onCancel={() => setPaying(false)} />}
       {phase === "upload" && (
         <>
           {usageLine && (

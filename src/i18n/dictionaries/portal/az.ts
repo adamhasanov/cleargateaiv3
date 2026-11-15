@@ -57,6 +57,7 @@ const portal = {
     },
     disclaimer: "Qiymətlər və limitlər ilkin dəyərlərdir və dəyişə bilər. Bu demo versiyada ödəniş yoxdur: plan və limit yalnız simulyasiyadır.",
     demoNote: "Demo rejimi: heç bir ödəniş aparılmır. Plan seçimi yalnız bu brauzerdə saxlanılır.", demoCreditAdded: "Tək yoxlama əlavə olundu (simulyasiya, ödəniş aparılmadı).", demoPlanSet: "{plan} planı seçildi (simulyasiya, ödəniş aparılmadı).",
+    fakePayTitle: "Ödəniş (simulyasiya)", fakePayNote: "Bu saxta ödənişdir: kart məlumatı istənmir, heç bir ödəniş xidməti ilə əlaqə yoxdur və pul çəkilmir.", fakePayCta: "Ödə (simulyasiya)", fakePaying: "Ödəniş aparılır…", fakePaid: "Ödəniş uğurludur (simulyasiya).", fakeCancel: "Ləğv et",
     singleTitle: "Tək yoxlama", singleText: "Planınızın limiti bitibsə, bir yoxlama üçün ayrıca ödəyin.", singleCta: "Bir yoxlama al",
     paymentsOff: "Ödəniş sistemi hələ qoşulmayıb. Planları görmək mümkündür, amma alış hələ işləmir.",
     loginToBuy: "Almaq üçün daxil olun", usersNote: "Komanda hesabları (bir neçə istifadəçi) hazırlanır.",
